@@ -47,10 +47,12 @@
 1. Clone the repository: git clone https://github.com/lakasir/lakasir.git
 2. Navigate to the project directory: cd lakasir
 3. Install dependencies:
+   * yarn install
+   * build assets using `vite build`
 4. Laravel:
-   * composer install
    * cp .env.example .env
    * edit the env based on your local configuration
+   * composer install
    * php artisan key:generate
    * php artisan migrate --path=database/migrations/tenant --seed
 5. Create the user using `php artisan app:create-user`
