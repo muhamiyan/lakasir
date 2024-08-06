@@ -1,4 +1,4 @@
-/node_modules
+# Laravel stuff
 /public/hot
 /public/storage
 /public/tmp
@@ -8,17 +8,29 @@
 /public/js/
 /public/css/
 /public/app/
-/nginx/*.log
-/packages
-/public/build/manifest.json
-public/build
-tags
-.env
-.env.backup
 .phpunit.result.cache
 Homestead.json
 Homestead.yaml
-npm-debug.log
-yarn-error.log
 tinker.php
 _ide_helper.php
+tags
+
+# Environments
+.env
+.env.backup
+
+# Node JS
+/node_modules
+
+# Distribution / packaging
+/packages
+/public/build/manifest.json
+public/build
+
+# Log
+/nginx/*.log
+npm-debug.log
+yarn-error.log
+
+# IDE
+.idea
