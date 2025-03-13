@@ -54,7 +54,7 @@ class Product extends Model
 
         return $this
             ->stocks()
-            ->where('type', 'in')
+            ->whereIn('type', ['in', 'manufacture', 'repack'])
             ->when($usingNormalPrice, fn (Builder $query) => $query->orderBy('date')->latest())
             ->when($usingFifoPrice, fn (Builder $query) => $query
                 ->where('stock', '>', 0)

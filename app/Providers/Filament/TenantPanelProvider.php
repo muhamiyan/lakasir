@@ -9,6 +9,7 @@ use App\Features\PosV2;
 use App\Features\Purchasing;
 use App\Features\Receivable;
 use App\Features\Role;
+use App\Features\StockEntry;
 use App\Features\StockOpname;
 use App\Features\Supplier;
 use App\Features\User;
@@ -34,6 +35,7 @@ use App\Filament\Tenant\Resources\ReceivableResource;
 use App\Filament\Tenant\Resources\RoleResource;
 use App\Filament\Tenant\Resources\SellingResource;
 use App\Filament\Tenant\Resources\StockOpnameResource;
+use App\Filament\Tenant\Resources\StockEntryResource;
 use App\Filament\Tenant\Resources\SupplierResource;
 use App\Filament\Tenant\Resources\TableResource;
 use App\Filament\Tenant\Resources\UserResource;
@@ -164,6 +166,7 @@ class TenantPanelProvider extends PanelProvider
         return [
             NavigationGroup::make(__('Inventory'))->items([
                 $this->generateNavigationItem(PurchasingResource::class, Purchasing::class),
+                $this->generateNavigationItem(StockEntryResource::class, StockEntry::class),
                 $this->generateNavigationItem(StockOpnameResource::class, StockOpname::class),
                 $this->generateNavigationItem(ProductResource::class),
                 $this->generateNavigationItem(CategoryResource::class),

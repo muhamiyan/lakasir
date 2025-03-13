@@ -67,6 +67,39 @@ class StockService
         }
     }
 
+    public function entryStock($data): Stock
+    {
+        $product = Product::find($data['product_id']);
+
+        $data['stock'] = $data['init_stock'];
+        $data['date'] = $data['date'] ?? now();
+
+        if ($data['is_ready']) {
+            $product->stock += $data['stock'];
+            $product->save();
+        }
+
+        $stock = new Stock();
+        $stock->fill($data);
+        $stock->save();
+
+        return $stock;
+    }
+
+    public function updateReadyStock(Stock $stock): void
+    {
+        $product = Product::find($stock->product_id);
+        if ($stock->is_ready) {
+            $stock->is_ready = false;
+            $product->stock -= $stock->stock;
+        }else {
+            $stock->is_ready = true;
+            $product->stock += $stock->stock;
+        }
+        $stock->save();
+        $product->save();
+    }
+
     public function create($data, ?Purchasing $purchasing = null): Stock
     {
         $data['stock'] = $data['stock'] ?? 0;

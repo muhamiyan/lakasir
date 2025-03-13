@@ -166,6 +166,12 @@ class PermissionSeeder extends Seeder
                         ],
                         'guard' => ['web', 'sanctum'],
                     ],
+                    'stock entry' => [
+                        'permission' => [
+                            'c', 'r', 'u', 'd',
+                        ],
+                        'guard' => ['web', 'sanctum'],
+                    ],
                     'stock opname' => [
                         'permission' => [
                             'c', 'r', 'u', 'd', 'approve',
