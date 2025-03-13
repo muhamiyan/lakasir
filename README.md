@@ -21,13 +21,14 @@
 - **Discount**: You can sell the product with a discount per item or global discount.
 - **Purchasing**: Manage purchase orders and supplier relationships.
 - **Stock Opname**: Conduct stock taking and inventory audits to ensure accuracy.
-- **Debt Management**: Track and manage debts owed by and to your business.
+- **Receivable Management**: Track and manage receivables owed by and to your business.
 - **Payment Method Management**: Define and manage various payment methods.
 - **Voucher Management**: Create, distribute, and track the usage of vouchers.
 - **Reporting**: Generate reports for insights into sales and performance.
 - **Simple Accounting**: Basic accounting features to track income, expenses, and profits.
 - **Real-time Dashboard**: Monitor business metrics and performance in real-time.
 - **Web usb direct printing**: support the thermal printer using usb feature from browser (Chrome, Firefox)
+- **Barcode support**: we can use the barcode on stock opname, purchasing, and POS feature
 
 ## Screenshots
 
@@ -48,12 +49,17 @@
 2. Navigate to the project directory: cd lakasir
 3. Install dependencies:
 4. Laravel:
-   * composer install
-   * cp .env.example .env
+   * `composer install`
+   * `cp .env.example .env`
    * edit the env based on your local configuration
-   * php artisan key:generate
-   * php artisan migrate --path=database/migrations/tenant --seed
-5. Create the user using `php artisan app:create-user`
+   * `php artisan key:generate`
+   * `php artisan migrate --path=database/migrations/tenant --seed`
+   * `php artisan filament:assets`
+   * `php artisan livewire:publish --assets`
+5. Javascript:
+  * `npm install`
+  * `npm run build or npm run dev`
+6. Create the user using `php artisan app:create-user`
 
 ## Usage
 * api: localdomain.test/api/test
@@ -82,3 +88,14 @@ For any inquiries or support, please contact lakasirapp@gmail.com or you can ope
 
 [<img src="https://trakteer.id/images/v2/trakteer-logo.png" alt="drawing" width="100"/>](https://trakteer.id/sheenazien8/tip?quantity=1)
 <a href="https://www.buymeacoffee.com/sheenazien8" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-green.png" alt="Buy Me A Coffee" style="height: 20px !important;width: 100px !important;" ></a>
+
+
+## Star History
+
+<a href="https://star-history.com/#lakasir/lakasir&Date">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=lakasir/lakasir&type=Date&theme=dark" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=lakasir/lakasir&type=Date" />
+   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=lakasir/lakasir&type=Date" />
+ </picture>
+</a>

@@ -1,5 +1,5 @@
 @php
-  use App\Features\{Member, Voucher};
+  use App\Features\{Member, Voucher, Discount};
 @endphp
 
 <div class="space-y-3">
@@ -25,6 +25,15 @@
     <p>{{ __('Note') }}</p>
     <div>{!! $cartDetail['note'] ?? '-' !!}</div>
   </div>
+  @if($about && $about->business_type == 'fnb')
+    <div class="flex justify-between hover:underline cursor-pointer"
+        x-on:mousedown="$dispatch('open-modal', {
+          id: 'modal-selected-table'
+        })">
+      <p>{{ __('Table') }}</p>
+      <div>{!! $cartDetail['table_id'] ?? '-' !!}</div>
+    </div>
+  @endif
   @feature(Voucher::class)
   <div class="flex justify-between">
     <div>
@@ -50,6 +59,7 @@
     </div>
   </div>
   @endfeature
+  @feature(Discount::class)
   <div class="flex justify-between hover:underline cursor-pointer"
       x-on:mousedown="$dispatch('open-modal', {
         id: 'edit-detail',
@@ -60,5 +70,6 @@
     <p>{{ __('Discount') }}</p>
     <div>{{ $cartDetail['discount_price'] ?? '-' }}</div>
   </div>
+  @endfeature
 </div>
 

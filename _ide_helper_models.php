@@ -111,6 +111,7 @@ namespace App\Models\Tenants{
  * @property float $qty
  * @property float|null $price
  * @property float $discount_price
+ * @property int|null $price_unit_id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\Tenants\User $cashier
@@ -118,6 +119,7 @@ namespace App\Models\Tenants{
  * @property-read mixed $final_price_format
  * @property-read mixed $price_format_m_oney
  * @property-read mixed $hero_image
+ * @property-read \App\Models\Tenants\PriceUnit|null $priceUnit
  * @property-read \App\Models\Tenants\Product $product
  * @method static \Illuminate\Database\Eloquent\Builder|CartItem cashier()
  * @method static \Illuminate\Database\Eloquent\Builder|CartItem newModelQuery()
@@ -127,6 +129,7 @@ namespace App\Models\Tenants{
  * @method static \Illuminate\Database\Eloquent\Builder|CartItem whereDiscountPrice($value)
  * @method static \Illuminate\Database\Eloquent\Builder|CartItem whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|CartItem wherePrice($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CartItem wherePriceUnitId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|CartItem whereProductId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|CartItem whereQty($value)
  * @method static \Illuminate\Database\Eloquent\Builder|CartItem whereUpdatedAt($value)
@@ -195,112 +198,6 @@ namespace App\Models\Tenants{
  * 
  *
  * @property int $id
- * @property int $member_id
- * @property int $selling_id
- * @property float $total_debt
- * @property float $rest_debt
- * @property string $due_date
- * @property string|null $last_billing_date
- * @property int|null $total_billing_via_whatsapp
- * @property int $status
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Tenants\DebtItem> $debtItems
- * @property-read int|null $debt_items_count
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Tenants\DebtPayment> $debtPayments
- * @property-read int|null $debt_payments_count
- * @property-read \App\Models\Tenants\Member $member
- * @property-read \App\Models\Tenants\Selling $selling
- * @method static \Illuminate\Database\Eloquent\Builder|Debt newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Debt newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Debt query()
- * @method static \Illuminate\Database\Eloquent\Builder|Debt whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Debt whereDueDate($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Debt whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Debt whereLastBillingDate($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Debt whereMemberId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Debt whereRestDebt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Debt whereSellingId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Debt whereStatus($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Debt whereTotalBillingViaWhatsapp($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Debt whereTotalDebt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Debt whereUpdatedAt($value)
- * @mixin \Eloquent
- */
-	#[\AllowDynamicProperties]
-	class IdeHelperDebt {}
-}
-
-namespace App\Models\Tenants{
-/**
- * 
- *
- * @property int $id
- * @property int $product_id
- * @property int $debt_id
- * @property float $amount
- * @property float $price
- * @property float $subtotal
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \App\Models\Tenants\Debt $debt
- * @property-read \App\Models\Tenants\Product $product
- * @method static \Illuminate\Database\Eloquent\Builder|DebtItem newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|DebtItem newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|DebtItem query()
- * @method static \Illuminate\Database\Eloquent\Builder|DebtItem whereAmount($value)
- * @method static \Illuminate\Database\Eloquent\Builder|DebtItem whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|DebtItem whereDebtId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|DebtItem whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|DebtItem wherePrice($value)
- * @method static \Illuminate\Database\Eloquent\Builder|DebtItem whereProductId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|DebtItem whereSubtotal($value)
- * @method static \Illuminate\Database\Eloquent\Builder|DebtItem whereUpdatedAt($value)
- * @mixin \Eloquent
- */
-	#[\AllowDynamicProperties]
-	class IdeHelperDebtItem {}
-}
-
-namespace App\Models\Tenants{
-/**
- * 
- *
- * @property int $id
- * @property int $user_id
- * @property int $payment_method_id
- * @property int $debt_id
- * @property float $amount
- * @property float $last_debt
- * @property string $date
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \App\Models\Tenants\Debt $debt
- * @property-read \App\Models\Tenants\PaymentMethod $paymentMethod
- * @property-read \App\Models\Tenants\User $user
- * @method static \Illuminate\Database\Eloquent\Builder|DebtPayment newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|DebtPayment newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|DebtPayment query()
- * @method static \Illuminate\Database\Eloquent\Builder|DebtPayment whereAmount($value)
- * @method static \Illuminate\Database\Eloquent\Builder|DebtPayment whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|DebtPayment whereDate($value)
- * @method static \Illuminate\Database\Eloquent\Builder|DebtPayment whereDebtId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|DebtPayment whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|DebtPayment whereLastDebt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|DebtPayment wherePaymentMethodId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|DebtPayment whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|DebtPayment whereUserId($value)
- * @mixin \Eloquent
- */
-	#[\AllowDynamicProperties]
-	class IdeHelperDebtPayment {}
-}
-
-namespace App\Models\Tenants{
-/**
- * 
- *
- * @property int $id
  * @property string $name
  * @property string|null $identity_type
  * @property string|null $identity_number
@@ -310,8 +207,8 @@ namespace App\Models\Tenants{
  * @property string|null $email
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Tenants\Debt> $debts
- * @property-read int|null $debts_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Tenants\Receivable> $receivables
+ * @property-read int|null $receivables_count
  * @method static \Database\Factories\Tenants\MemberFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|Member newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Member newQuery()
@@ -371,7 +268,7 @@ namespace App\Models\Tenants{
  * @property bool $is_debit
  * @property bool $is_credit
  * @property bool $is_wallet
- * @property-read string|null $icon
+ * @property string|null $icon
  * @property string|null $waletable_type
  * @property int|null $waletable_id
  * @property \Illuminate\Support\Carbon|null $created_at
@@ -399,6 +296,34 @@ namespace App\Models\Tenants{
  */
 	#[\AllowDynamicProperties]
 	class IdeHelperPaymentMethod {}
+}
+
+namespace App\Models\Tenants{
+/**
+ * 
+ *
+ * @property int $id
+ * @property int $product_id
+ * @property float $selling_price
+ * @property float $stock
+ * @property string $unit
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\Tenants\Product $product
+ * @method static \Illuminate\Database\Eloquent\Builder|PriceUnit newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|PriceUnit newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|PriceUnit query()
+ * @method static \Illuminate\Database\Eloquent\Builder|PriceUnit whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PriceUnit whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PriceUnit whereProductId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PriceUnit whereSellingPrice($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PriceUnit whereStock($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PriceUnit whereUnit($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PriceUnit whereUpdatedAt($value)
+ * @mixin \Eloquent
+ */
+	#[\AllowDynamicProperties]
+	class IdeHelperPriceUnit {}
 }
 
 namespace App\Models\Tenants{
@@ -454,6 +379,8 @@ namespace App\Models\Tenants{
  * @property-read mixed $hero_image
  * @property mixed $initial_price_calculate
  * @property-read mixed $net_profit
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Tenants\PriceUnit> $priceUnits
+ * @property-read int|null $price_units_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Tenants\SellingDetail> $sellingDetails
  * @property-read int|null $selling_details_count
  * @property mixed $selling_price_calculate
@@ -561,39 +488,154 @@ namespace App\Models\Tenants{
  * 
  *
  * @property int $id
+ * @property int|null $payment_method_id
  * @property int $supplier_id
+ * @property int|null $user_id
  * @property string $number
  * @property string|null $due_date
+ * @property string|null $approved_at
  * @property string|null $date
  * @property string|null $image
  * @property float $total_initial_price
  * @property float $total_selling_price
  * @property float $tax
  * @property string $status
+ * @property int $payment_status
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\Tenants\PaymentMethod|null $paymentMethod
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Tenants\Stock> $stocks
  * @property-read int|null $stocks_count
  * @property-read \App\Models\Tenants\Supplier $supplier
  * @method static \Illuminate\Database\Eloquent\Builder|Purchasing newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Purchasing newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Purchasing query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Purchasing whereApprovedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Purchasing whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Purchasing whereDate($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Purchasing whereDueDate($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Purchasing whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Purchasing whereImage($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Purchasing whereNumber($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Purchasing wherePaymentMethodId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Purchasing wherePaymentStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Purchasing whereStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Purchasing whereSupplierId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Purchasing whereTax($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Purchasing whereTotalInitialPrice($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Purchasing whereTotalSellingPrice($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Purchasing whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Purchasing whereUserId($value)
  * @mixin \Eloquent
  */
 	#[\AllowDynamicProperties]
 	class IdeHelperPurchasing {}
+}
+
+namespace App\Models\Tenants{
+/**
+ * 
+ *
+ * @property int $id
+ * @property int $member_id
+ * @property int $selling_id
+ * @property float $total_receivable
+ * @property float $rest_receivable
+ * @property string $due_date
+ * @property string|null $last_billing_date
+ * @property int|null $total_billing_via_whatsapp
+ * @property int $status
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\Tenants\Member $member
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Tenants\ReceivableItem> $receivableItems
+ * @property-read int|null $receivable_items_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Tenants\ReceivablePayment> $receivablePayments
+ * @property-read int|null $receivable_payments_count
+ * @property-read \App\Models\Tenants\Selling $selling
+ * @method static \Illuminate\Database\Eloquent\Builder|Receivable newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Receivable newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Receivable query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Receivable whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Receivable whereDueDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Receivable whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Receivable whereLastBillingDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Receivable whereMemberId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Receivable whereRestReceivable($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Receivable whereSellingId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Receivable whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Receivable whereTotalBillingViaWhatsapp($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Receivable whereTotalReceivable($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Receivable whereUpdatedAt($value)
+ * @mixin \Eloquent
+ */
+	#[\AllowDynamicProperties]
+	class IdeHelperReceivable {}
+}
+
+namespace App\Models\Tenants{
+/**
+ * 
+ *
+ * @property int $id
+ * @property int $product_id
+ * @property int $receivable_id
+ * @property float $amount
+ * @property float $price
+ * @property float $subtotal
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\Tenants\Product $product
+ * @property-read \App\Models\Tenants\Receivable $receivable
+ * @method static \Illuminate\Database\Eloquent\Builder|ReceivableItem newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|ReceivableItem newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|ReceivableItem query()
+ * @method static \Illuminate\Database\Eloquent\Builder|ReceivableItem whereAmount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ReceivableItem whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ReceivableItem whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ReceivableItem wherePrice($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ReceivableItem whereProductId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ReceivableItem whereReceivableId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ReceivableItem whereSubtotal($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ReceivableItem whereUpdatedAt($value)
+ * @mixin \Eloquent
+ */
+	#[\AllowDynamicProperties]
+	class IdeHelperReceivableItem {}
+}
+
+namespace App\Models\Tenants{
+/**
+ * 
+ *
+ * @property int $id
+ * @property int $user_id
+ * @property int $payment_method_id
+ * @property int $receivable_id
+ * @property float $amount
+ * @property float $last_receivable
+ * @property string $date
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\Tenants\PaymentMethod $paymentMethod
+ * @property-read \App\Models\Tenants\Receivable $receivable
+ * @property-read \App\Models\Tenants\User $user
+ * @method static \Illuminate\Database\Eloquent\Builder|ReceivablePayment newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|ReceivablePayment newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|ReceivablePayment query()
+ * @method static \Illuminate\Database\Eloquent\Builder|ReceivablePayment whereAmount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ReceivablePayment whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ReceivablePayment whereDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ReceivablePayment whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ReceivablePayment whereLastReceivable($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ReceivablePayment wherePaymentMethodId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ReceivablePayment whereReceivableId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ReceivablePayment whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ReceivablePayment whereUserId($value)
+ * @mixin \Eloquent
+ */
+	#[\AllowDynamicProperties]
+	class IdeHelperReceivablePayment {}
 }
 
 namespace App\Models\Tenants{
@@ -627,6 +669,7 @@ namespace App\Models\Tenants{
  * @property int $id
  * @property int|null $user_id
  * @property int|null $member_id
+ * @property int|null $table_id
  * @property string|null $customer_number
  * @property int|null $cash_drawer_id
  * @property string|null $note
@@ -654,6 +697,7 @@ namespace App\Models\Tenants{
  * @property-read \App\Models\Tenants\PaymentMethod|null $paymentMethod
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Tenants\SellingDetail> $sellingDetails
  * @property-read int|null $selling_details_count
+ * @property-read \App\Models\Tenants\Table|null $table
  * @property-read \App\Models\Tenants\User|null $user
  * @method static \Database\Factories\Tenants\SellingFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|Selling isNotPaid()
@@ -677,6 +721,7 @@ namespace App\Models\Tenants{
  * @method static \Illuminate\Database\Eloquent\Builder|Selling whereNote($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Selling wherePayedMoney($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Selling wherePaymentMethodId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Selling whereTableId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Selling whereTax($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Selling whereTaxPrice($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Selling whereTotalCost($value)
@@ -803,17 +848,21 @@ namespace App\Models\Tenants{
  * 
  *
  * @property int $id
+ * @property int $user_id
  * @property string $status
  * @property string $number
  * @property string $pic
  * @property string $date
+ * @property string|null $approved_at
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Tenants\StockOpnameItem> $stockOpnameItems
  * @property-read int|null $stock_opname_items_count
+ * @property-read \App\Models\Tenants\User $user
  * @method static \Illuminate\Database\Eloquent\Builder|StockOpname newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|StockOpname newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|StockOpname query()
+ * @method static \Illuminate\Database\Eloquent\Builder|StockOpname whereApprovedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|StockOpname whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|StockOpname whereDate($value)
  * @method static \Illuminate\Database\Eloquent\Builder|StockOpname whereId($value)
@@ -821,6 +870,7 @@ namespace App\Models\Tenants{
  * @method static \Illuminate\Database\Eloquent\Builder|StockOpname wherePic($value)
  * @method static \Illuminate\Database\Eloquent\Builder|StockOpname whereStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder|StockOpname whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|StockOpname whereUserId($value)
  * @mixin \Eloquent
  */
 	#[\AllowDynamicProperties]
@@ -836,8 +886,8 @@ namespace App\Models\Tenants{
  * @property int $stock_opname_id
  * @property string $adjustment_type
  * @property float $current_stock
- * @property float $amount
- * @property float $amount_after_adjustment
+ * @property float $actual_stock
+ * @property float $missing_stock
  * @property string|null $attachment
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
@@ -846,13 +896,13 @@ namespace App\Models\Tenants{
  * @method static \Illuminate\Database\Eloquent\Builder|StockOpnameItem newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|StockOpnameItem newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|StockOpnameItem query()
+ * @method static \Illuminate\Database\Eloquent\Builder|StockOpnameItem whereActualStock($value)
  * @method static \Illuminate\Database\Eloquent\Builder|StockOpnameItem whereAdjustmentType($value)
- * @method static \Illuminate\Database\Eloquent\Builder|StockOpnameItem whereAmount($value)
- * @method static \Illuminate\Database\Eloquent\Builder|StockOpnameItem whereAmountAfterAdjustment($value)
  * @method static \Illuminate\Database\Eloquent\Builder|StockOpnameItem whereAttachment($value)
  * @method static \Illuminate\Database\Eloquent\Builder|StockOpnameItem whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|StockOpnameItem whereCurrentStock($value)
  * @method static \Illuminate\Database\Eloquent\Builder|StockOpnameItem whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|StockOpnameItem whereMissingStock($value)
  * @method static \Illuminate\Database\Eloquent\Builder|StockOpnameItem whereProductId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|StockOpnameItem whereStockOpnameId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|StockOpnameItem whereUpdatedAt($value)
@@ -869,6 +919,12 @@ namespace App\Models\Tenants{
  * @property int $id
  * @property string $name
  * @property string|null $phone_number
+ * @property string|null $contact_name
+ * @property string|null $email
+ * @property string|null $address
+ * @property string|null $city
+ * @property string|null $country
+ * @property string|null $postal_code
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property \Illuminate\Support\Carbon|null $deleted_at
@@ -876,11 +932,17 @@ namespace App\Models\Tenants{
  * @method static \Illuminate\Database\Eloquent\Builder|Supplier newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Supplier onlyTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder|Supplier query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Supplier whereAddress($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Supplier whereCity($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Supplier whereContactName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Supplier whereCountry($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Supplier whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Supplier whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Supplier whereEmail($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Supplier whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Supplier whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Supplier wherePhoneNumber($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Supplier wherePostalCode($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Supplier whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Supplier withTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder|Supplier withoutTrashed()
@@ -888,6 +950,34 @@ namespace App\Models\Tenants{
  */
 	#[\AllowDynamicProperties]
 	class IdeHelperSupplier {}
+}
+
+namespace App\Models\Tenants{
+/**
+ * 
+ *
+ * @property int $id
+ * @property string $number
+ * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Tenants\Selling> $Sellings
+ * @property-read int|null $sellings_count
+ * @method static \Illuminate\Database\Eloquent\Builder|Table newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Table newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Table onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|Table query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Table whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Table whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Table whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Table whereNumber($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Table whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Table withTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|Table withoutTrashed()
+ * @mixin \Eloquent
+ */
+	#[\AllowDynamicProperties]
+	class IdeHelperTable {}
 }
 
 namespace App\Models\Tenants{
@@ -961,9 +1051,9 @@ namespace App\Models\Tenants{
  * @method static \Illuminate\Database\Eloquent\Builder|User newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|User onlyTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder|User owner()
- * @method static \Illuminate\Database\Eloquent\Builder|User permission($permissions)
+ * @method static \Illuminate\Database\Eloquent\Builder|User permission($permissions, $without = false)
  * @method static \Illuminate\Database\Eloquent\Builder|User query()
- * @method static \Illuminate\Database\Eloquent\Builder|User role($roles, $guard = null)
+ * @method static \Illuminate\Database\Eloquent\Builder|User role($roles, $guard = null, $without = false)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereDeletedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereEmail($value)
@@ -976,6 +1066,8 @@ namespace App\Models\Tenants{
  * @method static \Illuminate\Database\Eloquent\Builder|User whereRememberToken($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User withTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|User withoutPermission($permissions)
+ * @method static \Illuminate\Database\Eloquent\Builder|User withoutRole($roles, $guard = null)
  * @method static \Illuminate\Database\Eloquent\Builder|User withoutTrashed()
  * @mixin \Eloquent
  */

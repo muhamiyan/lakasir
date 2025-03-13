@@ -5,8 +5,10 @@ namespace App\Services\Tenants;
 use App\Events\RecalculateEvent;
 use App\Events\SellingCreated;
 use App\Models\Tenants\PaymentMethod;
+use App\Models\Tenants\PriceUnit;
 use App\Models\Tenants\Product;
 use App\Models\Tenants\Selling;
+use App\Models\Tenants\Setting;
 use App\Services\Tenants\Traits\HasNumber;
 use App\Services\VoucherService;
 use Exception;
@@ -24,6 +26,7 @@ class SellingService
             $selling = Selling::create($data);
 
             SellingCreated::dispatch($selling, $data);
+
             /** @var Collection<Product> $products */
             $products = Product::find($selling->sellingDetails->pluck('product_id'));
             RecalculateEvent::dispatch($products, $data);
@@ -39,6 +42,9 @@ class SellingService
 
     public function mapProductRequest(array $data): array
     {
+        if (Setting::get('default_tax', 0) != 0 && !isset($data['tax'])) {
+            $data['tax'] = Setting::get('default_tax');
+        }
         $request = [];
         $payed_money = ($data['payed_money'] ?? 0);
         if (isset($data['friend_price']) && ! $data['friend_price']) {
@@ -49,6 +55,9 @@ class SellingService
             $productsCollection = collect($data['products']);
             $productsCollection->each(
                 function ($product) use (&$total_price, &$total_cost, &$total_price_after_discount, &$total_discount_per_item) {
+                    if (isset($product['price_unit_id']) && $product['price_unit_id'] != null) {
+                        $product['price'] = PriceUnit::whereId($product['price_unit_id'])->first()->selling_price * $product['qty'];
+                    }
                     $modelProduct = Product::find($product['product_id']);
                     $total_price += $product['price'] ?? $modelProduct->selling_price * $product['qty'];
                     $total_discount_per_item += ($product['discount_price'] ?? 0);

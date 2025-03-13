@@ -7,7 +7,7 @@
 }
 
 .fi-sidebar-item a {
-  @apply py-2.5 px-2;
+  @apply py-1.5 px-2;
 }
 
 .fi-sidebar-item.fi-sidebar-item-active a {
@@ -36,4 +36,8 @@
 
 .fi-sidebar-item-active .fi-sidebar-item-label {
   @apply text-white dark:text-white;
+}
+
+.fi-tabs {
+  @apply mx-0;
 }

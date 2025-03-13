@@ -7,10 +7,12 @@ use App\Http\Controllers\Api\Tenants\Master\CategoryController;
 use App\Http\Controllers\Api\Tenants\Master\MemberController;
 use App\Http\Controllers\Api\Tenants\Master\Product\StockController;
 use App\Http\Controllers\Api\Tenants\Master\ProductController;
+use App\Http\Controllers\Api\Tenants\Master\SupplierController;
 use App\Http\Controllers\Api\Tenants\NotificationController;
 use App\Http\Controllers\Api\Tenants\PaymentMethodController;
 use App\Http\Controllers\Api\Tenants\ProfileController;
 use App\Http\Controllers\Api\Tenants\RegisterFCMTokenController;
+use App\Http\Controllers\Api\Tenants\Reports\PurchasingReportController;
 use App\Http\Controllers\Api\Tenants\Settings\SecureInitialPriceController;
 use App\Http\Controllers\Api\Tenants\Transaction\CashDrawerController;
 use App\Http\Controllers\Api\Tenants\Transaction\DashboardController;
@@ -22,7 +24,6 @@ use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\CashierReportController;
 use App\Http\Controllers\PrinterController;
-use App\Http\Controllers\PrintLabelController;
 use App\Http\Controllers\ProductReportController;
 use App\Http\Controllers\SellingReportController;
 use App\Http\Middleware\InitializeTenancyByDomain;
@@ -40,14 +41,14 @@ Route::middleware([
         Route::get('/', function () {
             return redirect()->to('/member');
         });
+        Route::get('/member/purchasing-report/generate', PurchasingReportController::class)
+            ->name('purchasing-report.generate');
         Route::get('/member/selling-report/generate', SellingReportController::class)
             ->name('selling-report.generate');
         Route::get('/member/product-report/generate', ProductReportController::class)
             ->name('product-report.generate');
         Route::get('/member/cashier-report/generate', CashierReportController::class)
             ->name('cashier-report.generate');
-        Route::get('/member/products/{product}/label/print/generate', PrintLabelController::class)
-            ->name('product-label.generate');
         Route::view('/member/sellings/{selling}/print', 'filament.tenant.pages.selling.print-receipt')
             ->name('selling.print');
         Route::get('/reset-password/{token}', ResetPassword::class)
@@ -105,6 +106,7 @@ Route::middleware([
             });
 
             Route::group(['prefix' => 'master'], function () {
+                Route::resource('/supplier', SupplierController::class);
                 Route::group(['prefix' => '/category'], function () {
                     Route::get('/', [CategoryController::class, 'index'])->can('read category');
                     Route::post('/', [CategoryController::class, 'store'])->can('create category');

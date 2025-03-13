@@ -6,12 +6,14 @@ use App\Features\Member as FeaturesMember;
 use App\Features\Voucher;
 use App\Filament\Tenant\Pages\Traits\CartInteraction;
 use App\Filament\Tenant\Pages\Traits\TableProduct;
+use App\Filament\Tenant\Resources\Traits\RefreshThePage;
 use App\Models\Tenants\About;
 use App\Models\Tenants\CartItem;
 use App\Models\Tenants\Member;
 use App\Models\Tenants\PaymentMethod;
 use App\Models\Tenants\Selling;
 use App\Models\Tenants\Setting;
+use App\Models\Tenants\Table;
 use App\Models\Tenants\Voucher as TenantsVoucher;
 use App\Rules\CheckProductStock;
 use App\Rules\ShouldSameWithSellingDetail;
@@ -35,7 +37,9 @@ use Illuminate\Validation\ValidationException;
 
 class Cashier extends Page implements HasForms, HasTable
 {
-    use CartInteraction, HasTranslatableResource, TableProduct;
+    use CartInteraction, HasTranslatableResource, RefreshThePage, TableProduct;
+
+    public static ?string $label = 'POS';
 
     protected static ?string $navigationIcon = 'heroicon-o-bolt';
 
@@ -62,6 +66,8 @@ class Cashier extends Page implements HasForms, HasTable
     public float $total_price = 0;
 
     public ?About $about;
+
+    public ?Collection $tableOption;
 
     private float $discount_price = 0;
 
@@ -98,6 +104,8 @@ class Cashier extends Page implements HasForms, HasTable
             ->select('id', 'name')
             ->get()
             ->pluck('name', 'id');
+
+        $this->tableOption = Table::select('id', 'number')->get();
 
         $this->storeCartForm->fill([
             'payment_method_id' => 1,
@@ -209,6 +217,7 @@ class Cashier extends Page implements HasForms, HasTable
         $this->cartDetail = array_merge($this->cartDetail, [
             'total_price' => $this->total_price,
         ]);
+
         $request = array_merge($this->cartDetail, [
             'discount_price' => floatval(str_replace(',', '', $this->cartDetail['discount_price'])),
             'products' => $this->cartItems->map(function (CartItem $cartItem) {
@@ -217,9 +226,11 @@ class Cashier extends Page implements HasForms, HasTable
                     'qty' => $cartItem->qty,
                     'price' => $cartItem->price,
                     'discount_price' => $cartItem->discount_price,
+                    'price_unit_id' => $cartItem->price_unit_id,
                 ];
             })->toArray(),
         ]);
+
         $pMethod = PaymentMethod::find($request['payment_method_id']);
         if (! $pMethod) {
             $pMethod = PaymentMethod::create([
@@ -266,7 +277,7 @@ class Cashier extends Page implements HasForms, HasTable
 
         $this->mount();
 
-        $this->dispatch('selling-created', selling: $selling->load('sellingDetails.product'));
+        $this->dispatch('selling-created', selling: $selling->load('sellingDetails.product', 'table'));
     }
 
     public function assignVoucher(string $code)
@@ -311,7 +322,12 @@ class Cashier extends Page implements HasForms, HasTable
 
         $this->discount_price = 0;
         $this->cartItems->each(function (CartItem $item) {
-            $this->sub_total += $item->price;
+            $priceUnit = $item->priceUnit?->selling_price;
+            if ($priceUnit) {
+                $priceUnit = $priceUnit * $item->qty;
+            }
+
+            $this->sub_total += $priceUnit ?? $item->price;
             if ($item->discount_price && $item->discount_price > 0) {
                 $this->discount_price += $item->discount_price;
             }

@@ -1,6 +1,6 @@
 @php
 use Filament\Facades\Filament;
-use App\Features\{PaymentShortcutButton, SellingTax};
+use App\Features\{PaymentShortcutButton, SellingTax, Discount};
 
 @endphp
 <div class="">
@@ -10,99 +10,119 @@ use App\Features\{PaymentShortcutButton, SellingTax};
     </div>
     <div class="fixed right-0 w-1/3 h-screen pb-10 overflow-y-scroll">
       <div class="px-4 mt-4 space-y-2 h-screen">
-        <div class="flex justify-between" x-data="fullscreen">
-          <p class="text-2xl font-bold">{{ __('Orders details') }}</p>
-          <div class="flex gap-x-2">
-            <x-heroicon-m-arrow-path
-              x-on:mousedown="document.location.reload()"
-              class="h-5 w-5 text-gray-900 dark:text-gray-300 cursor-pointer"
-            />
-            <x-heroicon-o-arrows-pointing-out
-              x-on:mousedown="requestFullscreen"
-              class="h-5 w-5 text-gray-900 dark:text-gray-300 cursor-pointer"
-            />
+        <div class="flex justify-between items-center" x-data="fullscreen">
+          <p class="text-xl font-semibold">{{ __('Orders details') }}</p>
+          <div class="flex items-center">
+            <div class="xl:flex gap-x-2 hidden items-center">
+              <a
+                href="/member/sellings"
+                class="py-1 px-4 flex justify-center items-center bg-gray-100 rounded-lg gap-x-1 text-gray-500">
+                <x-heroicon-o-arrow-left class="h-4 w-4 text-gray-500"/>
+                  <p class="hidden lg:block">{{ __('Back') }} </p>
+              </a>
+            </div>
+            <div class="gap-x-2">
+              <x-filament::dropdown placement="top-start">
+                <x-slot name="trigger">
+                  <x-heroicon-o-ellipsis-vertical class="h-8 w-8 text-gray-900 dark:text-gray-300 cursor-pointer" />
+                </x-slot>
+
+                <x-filament::dropdown.list>
+                  <x-filament::dropdown.list.item x-on:mousedown="document.location.reload()" >
+                    <div class="flex gap-x-2">
+                      <x-heroicon-m-arrow-path class="h-5 w-5 text-gray-900 dark:text-gray-300 cursor-pointer" />
+                        <p>{{ __('Reload') }} </p>
+                    </div>
+                  </x-filament::dropdown.list.item>
+
+                  <x-filament::dropdown.list.item x-on:mousedown="requestFullscreen">
+                    <div class="flex gap-x-2">
+                      <x-heroicon-o-arrows-pointing-out class="h-5 w-5 text-gray-900 dark:text-gray-300 cursor-pointer" />
+                        <p>{{ __('Fullscreen') }} </p>
+                    </div>
+                  </x-filament::dropdown.list.item>
+                  <x-filament::dropdown.list.item>
+                    <p class="flex gap-x-2"
+                      wire:confirm="Are you sure you want to clear all of the items?"
+                      wire:click.prevent="clearCart">
+                    <x-heroicon-o-trash class="h-5 w-5 text-gray-900 dark:text-gray-300 cursor-pointer"/> <span>{{ __('Clear') }} </span> </p>
+                  </x-filament::dropdown.list.item>
+
+                </x-filament::dropdown.list>
+              </x-filament::dropdown>
+            </div>
           </div>
         </div>
-        <div class="flex justify-between">
+        <hr/>
+        <div class="lg:flex hidden justify-between">
           <p class="">{{ Filament::auth()->user()->cashier_name }}</p>
         </div>
         <div class="flex justify-between items-center">
-          <p class="text-2xl font-bold mb-2">{{ __('Current Orders') }}</p>
-          <div class="flex gap-x-1">
-            <a
-              href="/member/sellings"
-              class="py-1 px-4 flex justify-center items-center bg-gray-100 rounded-lg gap-x-1 text-gray-500">
-                <x-heroicon-o-arrow-left class="h-4 w-4 text-gray-500"/>
-                <p>{{ __('Back') }} </p>
-            </a>
-            <button class="py-1 px-4 bg-red-200 text-red-500 rounded-lg flex gap-x-1 items-center"
-              wire:confirm="Are you sure you want to clear all of the items?"
-              wire:click.prevent="clearCart" >
-                <x-heroicon-o-trash class="h-4 w-4 text-red-500"/>
-                <p>{{ __('Clear') }} </p>
-            </button>
-          </div>
+          <p class="hidden lg:block text-2xl font-semibold mb-2">{{ __('Current Orders') }}</p>
+          <div class="flex gap-x-1"></div>
         </div>
-        <div class="overflow-y-scroll min-h-40 max-h-[35%] overflow-auto"
+        <div class="overflow-y-scroll min-h-40 max-h-[35%] overflow-auto" wire:loading.class="opacity-20" wire:target="addCart,reduceCart,deleteCart,addDiscountPricePerItem,addCartUsingScanner">
           @forelse($cartItems as $item)
-            <div class="flex justify-between mb-2 border rounded-lg bg-white dark:border-gray-900 dark:bg-gray-900 px-4 py-2" key="{{ rand() }}">
-              <div class="flex items-center space-x-3">
-                <img
-                class="object-cover h-16 w-20 rounded-lg"
-                src=" {{ $item->hero_image }}"/>
-                <div class="space-y-3">
+            <div class="mb-2 border rounded-lg bg-white dark:border-gray-900 dark:bg-gray-900 px-4 py-2" id="{{ $item->id }}" key="{{ rand() }}">
+              <div class="grid items-center space-x-3">
+                <div class="flex justify-between">
                   <p class="font-semibold"> {{ $item->product->name }}</p>
-                  <div class="flex space-x-3 h-8">
-                    <button
-                      class="!bg-lakasir-primary rounded-lg px-2 py-1"
-                      wire:click.stop="addCart( {{ $item->product_id  }} )"
-                      wire:loading.attr="disabled"
-                      >
-                      <x-heroicon-o-plus-small class="!text-white h-4 w-4"/>
-                    </button>
-                    <p class="my-auto">{{ $item->qty }}</p>
-                    <button
-                      class="!bg-gray-100 rounded-lg px-2 py-1"
-                      wire:click="reduceCart({{  $item->product_id  }})"
-                      wire:loading.attr="disabled"
-                      >
-                      <x-heroicon-o-minus-small class="!text-green-900 h-4 w-4"/>
-                    </button>
-                    <button
-                      class="!bg-danger-100 rounded-lg px-2 py-1"
-                      wire:click="deleteCart({{ $item->id  }})"
-                      wire:loading.attr="disabled"
-                      >
-                      <x-heroicon-o-trash class="!text-danger-900 h-4 w-4"/>
-                    </button>
+                  <p class="font-semibold text-lakasir-primary">{{ $item->price_format_money }}</p>
+                </div>
+              </div>
+              <div class="grid grid-cols-2 items-center text-right space-y-2">
+                <div class="col-span-2">
+                  @feature(Discount::class)
+                  <div class="flex justify-end">
+                    <x-filament::input.wrapper class="w-1/2">
+                      <x-filament::input
+                        type="text"
+                        id="{{ $item->product->name }}-{{ $item->id }}"
+                        value="{{ $item->discount_price == 0  ? '' : $item->discount_price }}"
+                        wire:keyup.debounce.500ms="addDiscountPricePerItem({{  $item  }}, parseFloat($event.target.value.replace(/,/g, '')))"
+                        placeholder="{{ __('Discount') }}"
+                        class="text-right w-1/2"
+                        inputMode="numeric"
+                        x-mask:dynamic="$money($input)"
+                        />
+                      </x-filament::input.wrapper>
                   </div>
+                  @endfeature
+                  @if($item->discount_price && $item->discount_price > 0)
+                    <p class="font-semibold text-lakasir-primary">{{ $item->final_price_format }}</p>
+                  @endif
                 </div>
               </div>
-              <div class="items-center text-right space-y-2">
-                <p class="font-semibold text-lakasir-primary">{{ $item->price_format_money }}</p>
-                <div class="flex justify-end">
-                <x-filament::input.wrapper class="w-1/2">
-                  <x-filament::input
-                    type="text"
-                    id="{{ $item->product->name }}-{{ $item->id }}"
-                    value="{{ $item->discount_price == 0  ? '' : $item->discount_price }}"
-                    wire:keyup.debounce.500ms="addDiscountPricePerItem({{  $item  }}, parseFloat($event.target.value.replace(/,/g, '')))"
-                    placeholder="{{ __('Discount') }}"
-                    class="text-right w-1/2"
-                    inputMode="numeric"
-                    x-mask:dynamic="$money($input)"
-                  />
-                </x-filament::input.wrapper>
+                <div class="flex space-x-3 h-8">
+                  <button
+                    class="!bg-lakasir-primary rounded-lg px-2 py-1"
+                    wire:click.stop="addCart( {{ $item->product_id  }} )"
+                    wire:loading.attr="disabled"
+                    >
+                    <x-heroicon-o-plus-small class="!text-white h-4 w-4"/>
+                  </button>
+                  <p class="my-auto">{{ $item->qty }}</p>
+                  <button
+                    class="!bg-gray-100 rounded-lg px-2 py-1"
+                    wire:click="reduceCart({{  $item->product_id  }})"
+                    wire:loading.attr="disabled"
+                    >
+                    <x-heroicon-o-minus-small class="!text-green-900 h-4 w-4"/>
+                  </button>
+                  <button
+                    class="!bg-danger-100 rounded-lg px-2 py-1"
+                    wire:click="deleteCart({{ $item->id  }})"
+                    wire:loading.attr="disabled"
+                    >
+                    <x-heroicon-o-trash class="!text-danger-900 h-4 w-4"/>
+                  </button>
+                  <livewire:price-setting :cart-item="$item" key="{{ $item->id }}" />
                 </div>
-                @if($item->discount_price && $item->discount_price > 0)
-                  <p class="font-semibold text-lakasir-primary">{{ $item->final_price_format }}</p>
-                @endif
-              </div>
             </div>
           @empty
             <div class="flex justify-center items-center h-40 border bg-white rounded-lg dark:border-gray-900 dark:bg-gray-900">
-              <x-heroicon-o-x-mark class="text-gray-900 dark:text-white h-10 w-10"/>
-                <p class="text-3xl text-gray-600 dark:text-white">{{ __('No item') }}</p>
+              <x-heroicon-o-x-mark class="text-gray-900 dark:text-white h-10 w-10 hidden lg:block"/>
+                <p class="text-xl lg:text-3xl text-gray-600 dark:text-white">{{ __('No item') }}</p>
             </div>
           @endforelse
         </div>
@@ -123,6 +143,7 @@ use App\Features\{PaymentShortcutButton, SellingTax};
       </div>
     </div>
   </div>
+  {{-- modal --}}
   <x-filament::modal
     id="edit-detail"
     width="2xl"
@@ -141,15 +162,15 @@ use App\Features\{PaymentShortcutButton, SellingTax};
     id="proceed-the-payment"
     width="5xl">
     <form wire:submit.prevent="proceedThePayment">
-    <div class="my-2 grid grid-cols-2 gap-x-4">
+    <div class="my-2 grid md:grid-cols-2 gap-x-4">
       <div x-data="detail">
         <div class="rounded-lg">
           <div class="mb-4 grid grid-cols-4 gap-1">
             <template x-for="paymentMethod in paymentMethods">
               <div
                 x-on:click="cartDetail['payment_method_id'] = paymentMethod.id; $wire.cartDetail['payment_method_id'] = paymentMethod.id;"
-                class="cursor-pointer hover:scale-105 border border-lakasir-primary rounded-md px-4 py-2 flex justify-center dark:text-white text-sm"
-                :class="cartDetail['payment_method_id']  == paymentMethod.id ? 'bg-lakasir-primary text-white' : 'dark:bg-gray-900 '"
+                class="cursor-pointer hover:scale-105 border-none rounded-md px-4 py-2 flex justify-center dark:text-white text-sm"
+                :class="cartDetail['payment_method_id']  == paymentMethod.id ? 'bg-lakasir-primary text-white' : 'dark:bg-gray-900 bg-gray-300 '"
                 x-text="paymentMethod.name.substring(0, 8)">
               </div>
             </template>
@@ -172,7 +193,7 @@ use App\Features\{PaymentShortcutButton, SellingTax};
           @error('payed_money') <span class="error text-danger-500">{{ $message }}</span> @enderror
           <input
             id="display"
-            class="w-full p-2 border border-gray-300 rounded-md text-lg text-right dark:bg-gray-900 dark:text-white h-20 text-black @error('payed_money') 'border-danger-500' @enderror"
+            class="w-full p-2 border border-gray-300 rounded-md text-lg text-right dark:bg-gray-900 bg-white dark:text-white text-black @error('payed_money') 'border-danger-500' @enderror"
             focus
             :disabled="isTouchScreen"
             x-mask:dynamic="$money($input)"
@@ -182,7 +203,7 @@ use App\Features\{PaymentShortcutButton, SellingTax};
           >
           <div class="grid grid-cols-3 gap-4 mt-4" id="calculator-button-shortcut">
           </div>
-          <div class="grid grid-cols-3 gap-4 mt-4" id="calculator-button">
+          <div class="grid grid-cols-3 gap-2 lg:gap-2 mt-2 lg:mt-2" id="calculator-button">
             <button type="button" class="col-span-3 bg-gray-300 hover:bg-gray-400 p-2 rounded-md text-lg" x-on:click="append('no_changes')">{{ __('No change') }}</button>
             <button type="button" class="bg-gray-300 hover:bg-gray-400 p-2 rounded-md text-lg" x-on:click="append(7)">7</button>
             <button type="button" class="bg-gray-300 hover:bg-gray-400 p-2 rounded-md text-lg" x-on:click="append(8)">8</button>
@@ -201,18 +222,25 @@ use App\Features\{PaymentShortcutButton, SellingTax};
                 class="h-5 w-5 text-gray-500 dark:text-white"
               />
             </button>
-            <button
-              wire:loading.attr="disabled"
-              type="submit" class="col-span-3 bg-lakasir-primary hover:bg-[#ff6611] p-2 rounded-md text-white text-lg flex justify-center items-center gap-x-2">
-              <div wire:loading>
-                <x-filament::loading-indicator class="h-5 w-5"/>
-              </div>
-              {{ __('Pay it') }}
-            </button>
+            <div class="flex col-span-3 gap-x-2">
+              <button
+                wire:loading.attr="disabled"
+                type="submit" class="w-full bg-lakasir-primary hover:bg-[#ff6611] p-2 rounded-md text-white text-lg flex justify-center items-center gap-x-2">
+                <div wire:loading>
+                  <x-filament::loading-indicator class="h-5 w-5"/>
+                </div>
+                {{ __('Pay it') }}
+              </button>
+              <button
+                wire:click="dispatch('close-modal', {id: 'proceed-the-payment'});"
+                type="button" class="w-full bg-gray-300 p-2 rounded-md text-lg flex justify-center items-center gap-x-2">
+                {{ __('Close') }}
+              </button>
+            </div>
           </div>
         </div>
       </div>
-      <div class="overflow-y-scroll max-h-[80vh]">
+      <div class="overflow-y-scroll max-h-[80vh] hidden md:block">
         @if ($errors->any())
           @foreach ($errors->all() as $error)
             <p class="error text-danger-500 text-lg text-center w-full">{{ $error }}</p>
@@ -243,6 +271,37 @@ use App\Features\{PaymentShortcutButton, SellingTax};
           {{ __('Print') }}
         </x-filament::button>
         <x-filament::button color="gray" x-on:click="$dispatch('close-modal', {id: 'success-modal'})">
+          {{ __('Close') }}
+        </x-filament::button>
+      </div>
+    </x-slot>
+  </x-filament::modal>
+  <x-filament::modal
+    id="modal-selected-table"
+    width="xl"
+    :close-by-clicking-away="false"
+    :close-by-escaping="false"
+    >
+    <div class="grid grid-cols-4 gap-4">
+      @foreach($tableOption as $table)
+      <div
+        x-on:click="$wire.cartDetail['table_id'] = {{ $table->id }};"
+        class="cursor-pointer hover:scale-105 border border-lakasir-primary rounded-md px-4 py-2 flex justify-center dark:text-white text-sm"
+        :class="$wire.cartDetail['table_id']  == {{ $table->id }} ? 'bg-lakasir-primary text-white' : 'dark:bg-gray-900 '"
+      >
+        {{ $table->number }}
+      </div>
+      @endforeach
+    </div>
+    <x-slot name="footer">
+      <x-slot name="heading">
+        <p id="titleEditDetail">{{ __('Choose the table') }}</p>
+      </x-slot>
+      <div class="grid grid-cols-2 gap-x-2">
+        <x-filament::button id="saveSelectedTable" x-on:click="$dispatch('close-modal', {id: 'modal-selected-table'}); $wire.storeCart()">
+          {{ __('Save') }}
+        </x-filament::button>
+        <x-filament::button color="gray" x-on:click="$dispatch('close-modal', {id: 'modal-selected-table'})">
           {{ __('Close') }}
         </x-filament::button>
       </div>
@@ -295,7 +354,10 @@ use App\Features\{PaymentShortcutButton, SellingTax};
             .text('-------------------------------');
         }
         printerAction.table(['@lang('Cashier')', selling.user.name])
-          .table(['@lang('Payment method')', selling.payment_method.name]);
+        if(selling.table != undefined && selling.table != null) {
+          printerAction.table(['@lang('Table')', selling.table.number])
+        }
+        printerAction.table(['@lang('Payment method')', selling.payment_method.name]);
         if(selling.member != undefined && selling.member != null) {
           printerAction
             .table(['Member', selling.member.name]);
@@ -325,12 +387,17 @@ use App\Features\{PaymentShortcutButton, SellingTax};
         }
         printerAction
           .table(['@lang('Subtotal')', moneyFormat(selling.total_price)])
-          .table(['@lang('Discount')', `(${moneyFormat(selling.total_discount_per_item + selling.discount_price)})`])
+        if("@js(feature(Discount::class))" == 'true') {
+          printerAction
+            .table(['@lang('Discount')', `(${moneyFormat(selling.total_discount_per_item + selling.discount_price)})`])
+        }
+        printerAction
           .table(['@lang('Total price')', moneyFormat(selling.grand_total_price)])
           .text('-------------------------------')
           .table(['@lang('Payed money')', moneyFormat(selling.payed_money)])
           .table(['@lang('Change')', moneyFormat(selling.money_changes)])
           .align('center');
+
         if(printerData.footer != undefined) {
           printerAction
             .text(printerData.footer);
@@ -418,10 +485,8 @@ use App\Features\{PaymentShortcutButton, SellingTax};
         suggestions.push(suggestion);
       }
     }
-    console.log(suggestions);
 
     suggestions.sort((a, b) => a - b);
-    console.log(suggestions);
 
     return suggestions;
   }
@@ -499,7 +564,7 @@ use App\Features\{PaymentShortcutButton, SellingTax};
 
       setTimeout(() => {
         scannerEnabled = true;
-      }, 2000);
+      }, 1000);
     } else {
       barcodeData += event.key;
     }
@@ -510,5 +575,3 @@ use App\Features\{PaymentShortcutButton, SellingTax};
   });
 </script>
 @endscript
-
-
