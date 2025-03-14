@@ -99,6 +99,13 @@ class GeneralSetting extends Page implements HasActions, HasForms
                                     50 => 50,
                                 ])
                                 ->translateLabel(),
+                            Select::make('selling_method')
+                                ->options([
+                                    'normal' => 'Normal',
+                                    'lifo' => 'LIFO',
+                                    'fifo' => 'FIFO',
+                                ])
+                                ->translateLabel(),
                             TextInput::make('default_tax')
                                 ->numeric()
                                 ->suffix('%')
