@@ -44,6 +44,7 @@ class SellingReportService
 
         $totalQty = 0;
         $totalCost = 0;
+        $totalPrice = 0;
         $totalGross = 0;
         $totalNet = 0;
         $totalGrossProfit = 0;
@@ -76,6 +77,7 @@ class SellingReportService
                     'code' => $selling->code,
                     'sku' => $detail->product->sku,
                     'name' => $detail->product->name,
+                    'total_selling_price' => $this->formatCurrency($detail->price),
                     'selling_price' => $this->formatCurrency($detail->price / $detail->qty),
                     'selling' => $this->formatCurrency($detail->price - ($detail->discount_price ?? 0)),
                     'discount_price' => $this->formatCurrency($detail->discount_price ?? 0),
@@ -90,6 +92,7 @@ class SellingReportService
 
             $totalCost += $totalCostPerSelling;
             $totalDiscount += ($selling->discount_price ?? 0);
+            $totalPrice += $totalBeforeDiscountPerSelling;
             $totalGross += $totalBeforeDiscountPerSelling;
             $totalNet += $totalAfterDiscountPerSelling;
             $totalNetProfitBeforeDiscountSelling += $totalNetProfitPerSelling;
@@ -102,6 +105,7 @@ class SellingReportService
         $footer = [
             'total_cost' => $this->formatCurrency($totalCost),
             'total_gross' => $this->formatCurrency($totalGross),
+            'total_price' => $this->formatCurrency($totalPrice),
             'total_net' => $this->formatCurrency($totalNet - $totalDiscount),
             'total_net_price_after_discount_per_item' => $this->formatCurrency($totalNet),
             'total_net_price_after_discount_selling' => $this->formatCurrency($totalNet - $totalDiscount),
