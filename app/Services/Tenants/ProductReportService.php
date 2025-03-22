@@ -73,7 +73,8 @@ class ProductReportService
                 'sku' => $product->sku,
                 'name' => $product->name,
                 'selling_price' => $this->formatCurrency($product->sellingDetails->sum('price') / $product->sellingDetails->sum('qty')),
-                'selling' => $this->formatCurrency($totalBeforeDiscountPerSelling - $totalDiscountPerItem),
+                'selling' => $this->formatCurrency($totalBeforeDiscountPerSelling),
+                'net_selling' => $this->formatCurrency($totalBeforeDiscountPerSelling - $totalDiscountPerItem),
                 'discount_price' => $this->formatCurrency($totalDiscountPerItem),
                 'initial_price' => $this->formatCurrency($totalCostPerSelling / $totalQtyPerSelling),
                 'qty' => $totalQtyPerSelling,
@@ -100,6 +101,7 @@ class ProductReportService
         $footer = [
             'total_cost' => $this->formatCurrency($totalCost),
             'total_gross' => $this->formatCurrency($totalGross),
+            'total_net_price' => $this->formatCurrency($totalNet),
             'total_net' => $this->formatCurrency($totalNet - $totalDiscount),
             'total_discount' => $this->formatCurrency($totalDiscount),
             'total_discount_per_item' => $this->formatCurrency($totalDiscountPerItem),
