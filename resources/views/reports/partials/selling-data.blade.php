@@ -31,7 +31,7 @@
       <x-table-row>
         <x-table-cell colspan="3"><b>{{ __('Sub Total') }}</b></x-table-cell>
         <x-table-cell style="width: 100px;" class="number"><b>{{ $footer['total_qty'] }}</b></x-table-cell>
-        <x-table-cell cstyle="width: 100px;" lass="number"><b>{{ $footer['total_price'] }}</b></x-table-cell>
+        <x-table-cell style="width: 100px;" lass="number"><b>{{ $footer['total_price'] }}</b></x-table-cell>
         <x-table-cell style="width: 100px;" class="number"><b>{{ $footer['total_discount_per_item'] }}</b></x-table-cell>
         <x-table-cell style="width: 100px;" class="number"><b>{{ $footer['total_net_price_after_discount_per_item'] }}</b></x-table-cell>
       </x-table-row>
