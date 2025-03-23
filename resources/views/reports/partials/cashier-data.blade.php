@@ -18,11 +18,9 @@
             <x-table-header-cell style="width: 100px;" class="number">{{ __('Price') }} </x-table-header-cell>
             <x-table-header-cell style="width: 100px;" class="number">{{ __('Cost') }}</x-table-header-cell>
             <x-table-header-cell style="width: 100px;" class="number">{{ __('Discount') }}</x-table-header-cell>
-            <x-table-header-cell style="width: 100px;" class="number">{{ __('Total Harga') }}</x-table-header-cell>
+            <x-table-header-cell style="width: 100px;" class="number">{{ __('Total Price') }}</x-table-header-cell>
             <x-table-header-cell style="width: 100px;" class="number">{{ __('Total Cost') }}</x-table-header-cell>
-            <x-table-header-cell style="width: 100px;" class="number">{{ __('Total Sesudah Discount') }}</x-table-header-cell>
-            <!-- <th style="width: 100px;" class="number">{{ __('Keuntungan Kotor') }}</th>
-              <th style="width: 100px;" class="number">{{ __('Keuntungan Bersih') }}</th> -->
+            <x-table-header-cell style="width: 100px;" class="number">{{ __('Net Selling') }}</x-table-header-cell>
           </x-table-row>
         </x-table-header>
         <tbody>
@@ -35,8 +33,6 @@
               <x-table-cell class="number">{{ $item['price'] }}</x-table-cell>
               <x-table-cell class="number">{{ $item['cost'] }}</x-table-cell>
               <x-table-cell class="number">{{ $item['total_after_discount'] }}</x-table-cell>
-              <!-- <td class="number">{{ $item['gross_profit'] }}</td>
-                <td class="number">{{ $item['net_profit'] }}</td> -->
             </x-table-row>
           @endforeach
           <x-table-row>
@@ -47,7 +43,7 @@
             <x-table-cell class="number"><b>{{ $report['total']['net_selling'] }}</b></x-table-cell>
           </x-table-row>
           <x-table-row>
-            <x-table-cell colspan="6"><b>{{ __('Discount Penjualan') }}</b></x-table-cell>
+            <x-table-cell colspan="6"><b>{{ __('Discount Voucher') }}</b></x-table-cell>
             <x-table-cell class="number"><b>({{ $report['total']['discount_selling'] }})</b></x-table-cell>
           </x-table-row>
           <x-table-row>
@@ -61,27 +57,23 @@
   <x-table class="mt-4">
     <x-table-header>
       <x-table-row>
-        <x-table-header-cell colspan="8" style="text-align: center;">{{ __('Grand Total') }}</x-table-header-cell>
+        <x-table-header-cell colspan="6" style="text-align: center;">{{ __('Grand Total') }}</x-table-header-cell>
       </x-table-row>
       <x-table-row>
-        <x-table-header-cell>{{ __('Cost') }}</x-table-header-cell>
-        <x-table-header-cell>{{ __('Penjualan') }}</x-table-header-cell>
-        <x-table-header-cell>{{ __('Discount per Penjualan') }}</x-table-header-cell>
-        <x-table-header-cell>{{ __('Discount per Item') }}</x-table-header-cell>
-        <x-table-header-cell>{{ __('Penjualan Setelah Discount') }}</x-table-header-cell>
-        <x-table-header-cell>{{ __('Keuntungan Kotor') }}</x-table-header-cell>
-        <x-table-header-cell>{{ __('Keuntungan Bersih Sebelum Diskon Penjualan') }}</x-table-header-cell>
-        <x-table-header-cell>{{ __('Keuntungan Bersih Setelah Diskon Penjualan') }}</x-table-header-cell>
+        <x-table-header-cell style="width: 100px;" class="number">{{ __('Total Price') }}</x-table-header-cell>
+        <x-table-header-cell style="width: 100px;" class="number">{{ __('Discount Voucher') }}</x-table-header-cell>
+        <x-table-header-cell style="width: 100px;" class="number">{{ __('Total Discount Per Item') }}</x-table-header-cell>
+        <x-table-header-cell style="width: 100px;" class="number">{{ __('Net Selling') }}</x-table-header-cell>
+        <x-table-header-cell style="width: 100px;" class="number">{{ __('Total Cost') }}</x-table-header-cell>
+        <x-table-header-cell style="width: 100px;" class="number">{{ __('Gross Profit') }}</x-table-header-cell>
       </x-table-row>
     </x-table-header>
     <tbody>
-      <x-table-cell class="number"><b>{{ $footer['total_cost'] }}</b></x-table-cell>
-      <x-table-cell class="number"><b>{{ $footer['total_gross'] }}</b></x-table-cell>
+      <x-table-cell class="number"><b>{{ $footer['total_price'] }}</b></x-table-cell>
       <x-table-cell class="number"><b>{{ $footer['total_discount'] }}</b></x-table-cell>
       <x-table-cell class="number"><b>{{ $footer['total_discount_per_item'] }}</b></x-table-cell>
       <x-table-cell class="number"><b>{{ $footer['total_net'] }}</b></x-table-cell>
-      <x-table-cell class="number"><b>{{ $footer['total_gross_profit'] }}</b></x-table-cell>
-      <x-table-cell class="number"><b>{{ $footer['total_net_profit_before_discount_selling'] }}</b></x-table-cell>
+      <x-table-cell class="number"><b>{{ $footer['total_cost'] }}</b></x-table-cell>
       <x-table-cell class="number"><b>{{ $footer['total_net_profit_after_discount_selling'] }}</b></x-table-cell>
     </tbody>
   </x-table>

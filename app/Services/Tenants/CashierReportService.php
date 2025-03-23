@@ -42,6 +42,7 @@ class CashierReportService
         $reports = [];
 
         $totalCost = 0;
+        $totalPrice = 0;
         $totalGross = 0;
         $totalNet = 0;
         $totalGrossProfit = 0;
@@ -100,6 +101,7 @@ class CashierReportService
 
             $totalCost += $totalCostPerSelling;
             $totalDiscount += ($selling->discount_price ?? 0);
+            $totalPrice += $totalBeforeDiscountPerSelling;
             $totalGross += $totalBeforeDiscountPerSelling;
             $totalNet += $totalAfterDiscountPerSelling;
             $totalGrossProfit += $totalGrossProfitPerSelling;
@@ -111,6 +113,7 @@ class CashierReportService
         $footer = [
             'total_cost' => $this->formatCurrency($totalCost),
             'total_gross' => $this->formatCurrency($totalGross),
+            'total_price' => $this->formatCurrency($totalPrice),
             'total_net' => $this->formatCurrency($totalNet - $totalDiscount),
             'total_discount' => $this->formatCurrency($totalDiscount),
             'total_discount_per_item' => $this->formatCurrency($totalDiscountPerItem),
