@@ -32,7 +32,8 @@ trait TableProduct
                             ->where(function ($query) {
                                 $query->where('stock', '>', 0)
                                     ->orWhere('is_non_stock', true);
-                            });
+                            })
+                        ->orWhere('type', 'service');
                     })
                     ->where('show', true)
                     // ->orWhere('type', 'service')

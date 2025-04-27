@@ -65,6 +65,7 @@ trait HasProductForm
     public function generateUnitFormComponent()
     {
         return TextInput::make('unit')
+            ->required()
             ->translateLabel();
     }
 
