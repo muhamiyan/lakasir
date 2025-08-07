@@ -69,7 +69,7 @@
 
 We welcome contributions from the community! If you'd like to contribute to Lakasir, please follow these steps:
 
-1. keep on eye on [project board](https://github.com/orgs/lakasir/projects/2/views/1)
+1. keep on eye on [roadmap](https://github.com/orgs/lakasir/discussions/321)
 2. Fork the repository.
 3. Create a new branch (git checkout -b feature/new-feature). 
 4. Make your changes and commit them (git commit -am 'Add new feature').
