@@ -11,7 +11,7 @@ trait CartInteraction
 {
     private function validateStock(Product $product, $qty): bool
     {
-        if (! $product->is_non_stock && ($product->stock < 0 || $product->stock < $qty)) {
+        if (! $product->is_non_stock && ($product->stocks()->sum("stock") < 0 || $product->stocks()->sum("stock") < $qty)) {
             Notification::make()
                 ->title(__('Stock is out'))
                 ->danger()
@@ -142,9 +142,7 @@ trait CartInteraction
 
     public function addCartUsingScanner(string $value)
     {
-        $product = Product::whereBarcode($value)
-            ->orWhere('sku', $value)
-            ->first();
+        $product = Product::findByBarcodeOrSku($value);
 
         if (! $product) {
             Notification::make()

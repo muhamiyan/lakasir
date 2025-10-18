@@ -351,6 +351,16 @@
     "Stock History": "Historial de inventario",
     "Import product": "Importar producto",
     "Point the cursor to this input first then scan the barcode": "Apunte el cursor a este campo y luego escanee el código de barras",
+    "Barcodes": "Códigos de Barras",
+    "Primary": "Principal",
+    "Secondary": "Secundario",
+    "Intern": "Interno",
+    "Other": "Otro",
+    "Description": "Descripción",
+    "Optional barcode description": "Descripción opcional del código",
+    "Add bardcode": "Agregar Código de Barras",
+    "Barcode already exists.": "El código de barras ya existe.",
     "Profile": "Perfil",
-    "Language": "Idioma"
+    "Language": "Idioma",
+    "Migrated from original barcode" : "Migrado desde campo barcode original"
 }

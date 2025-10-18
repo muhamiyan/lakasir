@@ -3,8 +3,10 @@
 namespace App\Filament\Tenant\Resources\ProductResource\RelationManagers;
 
 use App\Constants\StockType;
+use App\Events\RecalculateEvent;
 use App\Features\ProductExpired;
 use App\Filament\Tenant\Resources\ProductResource\Traits\HasProductForm;
+use App\Models\Tenants\Product;
 use App\Models\Tenants\Setting;
 use App\Models\Tenants\Stock;
 use App\Services\Tenants\StockService;
@@ -59,6 +61,9 @@ class StocksRelationManager extends RelationManager
                             'product_id' => $this->ownerRecord->id,
                             'is_ready' => true,
                         ]));
+
+                        $products = Product::find($this->ownerRecord->id);
+                        RecalculateEvent::dispatch($products, []);
                     })
                     ->createAnother(false),
             ])

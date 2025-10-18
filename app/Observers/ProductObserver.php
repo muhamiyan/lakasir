@@ -3,6 +3,7 @@
 namespace App\Observers;
 
 use App\Features\ProductStock;
+use App\Models\Tenants\Barcode;
 use App\Models\Tenants\Product;
 use App\Services\Tenants\StockService;
 use Illuminate\Contracts\Validation\DataAwareRule;
@@ -12,12 +13,18 @@ use Laravel\Pennant\Feature;
 class ProductObserver extends AbstractObserver implements DataAwareRule
 {
     protected $data = [];
+    protected static $tempBarcodesData = [];
 
     public function setData($data)
     {
         $this->data = $data;
 
         return $this;
+    }
+
+    public static function setTempBarcodesData(array $barcodesData)
+    {
+        self::$tempBarcodesData = $barcodesData;
     }
 
     private function generateSku(Product $product): string
@@ -52,9 +59,29 @@ class ProductObserver extends AbstractObserver implements DataAwareRule
         if (! $product->sku) {
             $product->sku = $this->generateSku($product);
         }
-        if (! $product->barcode) {
-            $product->barcode = $this->generateBarcode($product);
+
+
+        $hasFormBarcodes = !empty(self::$tempBarcodesData) &&
+                          is_array(self::$tempBarcodesData) &&
+                          !empty(array_filter(self::$tempBarcodesData, fn($barcode) => !empty($barcode['code'])));
+
+
+        if (! $hasFormBarcodes) {
+
+            $hasExistingBarcodes = $product->barcodes()->exists();
+
+            if (! $hasExistingBarcodes) {
+                $product->barcodes()->create([
+                    'code' => $this->generateBarcode($product),
+                    'type' => 'primary',
+                    'description' => 'Código generado automáticamente',
+                    'is_active' => true,
+                ]);
+            }
         }
+
+        self::$tempBarcodesData = [];
+
         $product->save();
         $stockService = new StockService();
         $stockService->create([

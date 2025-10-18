@@ -33,7 +33,7 @@ class ViewProduct extends ViewRecord
                 ->badgeColor(Color::Red),
             ActionGroup::make([
                 Actions\EditAction::make(),
-                Action::make(__('Print label'))
+                Action::make(__('Print Label'))
                     ->icon('heroicon-s-printer')
                     ->visible(can('can print label') && feature(PrintProductLabel::class))
                     ->action(fn ($data) => $this->printLabel($data)),

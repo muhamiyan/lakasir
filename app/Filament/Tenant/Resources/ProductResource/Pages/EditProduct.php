@@ -53,6 +53,24 @@ class EditProduct extends EditRecord
             $data['original_name'][$data['hero_images'][$key]] = $file->original_name;
         });
 
+        // Load barcodes
+        $data['barcodes'] = $this->getRecord()->barcodes()->get()->map(function ($barcode) {
+            return [
+                'id' => $barcode->id,
+                'code' => $barcode->code,
+                'type' => $barcode->type,
+                'description' => $barcode->description,
+            ];
+        })->toArray();
+
+        return $data;
+    }
+
+    protected function mutateFormDataBeforeSave(array $data): array
+    {
+        $barcodes = $data['barcodes'] ?? [];
+        unset($data['barcodes']);
+
         return $data;
     }
 
@@ -86,5 +104,23 @@ class EditProduct extends EditRecord
             );
 
         $product->save();
+
+        // Update barcodes
+        $barcodesData = $this->data['barcodes'] ?? [];
+
+        // Delete existing barcodes
+        $product->barcodes()->delete();
+
+        // Created new barcodes
+        foreach ($barcodesData as $barcodeData) {
+            if (!empty($barcodeData['code'])) {
+                $product->barcodes()->create([
+                    'code' => $barcodeData['code'],
+                    'type' => $barcodeData['type'] ?? 'primary',
+                    'description' => $barcodeData['description'] ?? null,
+                    'is_active' => true,
+                ]);
+            }
+        }
     }
 }

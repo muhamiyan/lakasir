@@ -55,11 +55,11 @@ class Product extends Model
         return $this
             ->stocks()
             ->where('type', 'in')
-            ->when($usingNormalPrice, fn (Builder $query) => $query->orderBy('date')->latest())
-            ->when($usingFifoPrice, fn (Builder $query) => $query
+            ->when($usingNormalPrice, fn(Builder $query) => $query->orderBy('date')->latest())
+            ->when($usingFifoPrice, fn(Builder $query) => $query
                 ->where('stock', '>', 0)
                 ->orderBy('created_at')->orderBy('date'))
-            ->when($usingLifoPrice, fn (Builder $query) => $query
+            ->when($usingLifoPrice, fn(Builder $query) => $query
                 ->where('stock', '>', 0)
                 ->orderByDesc('created_at')->orderByDesc('date'));
     }
@@ -83,7 +83,7 @@ class Product extends Model
 
                 return $stock;
             },
-            set: fn ($value) => $value
+            set: fn($value) => $value
         );
     }
 
@@ -99,7 +99,7 @@ class Product extends Model
 
                 return $stock->first()->initial_price;
             },
-            set: fn ($value) => $value
+            set: fn($value) => $value
         );
     }
 
@@ -115,7 +115,7 @@ class Product extends Model
 
                 return $stock->first()->selling_price;
             },
-            set: fn ($value) => $value
+            set: fn($value) => $value
         );
     }
 
@@ -125,22 +125,22 @@ class Product extends Model
             get: function ($value) {
                 return Number::currency($this->initial_price, Setting::get('currency', 'IDR'));
             },
-            set: fn ($value) => $value
+            set: fn($value) => $value
         );
     }
 
     public function heroImages(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $value ? Str::of($value)->explode(',') : [],
-            set: fn ($value) => $value ? Arr::join(is_array($value) ? $value : $value->toArray(), ',') : null
+            get: fn($value) => $value ? Str::of($value)->explode(',') : [],
+            set: fn($value) => $value ? Arr::join(is_array($value) ? $value : $value->toArray(), ',') : null
         );
     }
 
     public function netProfit(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->selling_price - $this->initial_price
+            get: fn() => $this->selling_price - $this->initial_price
         );
     }
 
@@ -210,5 +210,45 @@ class Product extends Model
     public function priceUnits(): HasMany
     {
         return $this->hasMany(PriceUnit::class);
+    }
+
+    /**
+     * Get all barcodes associated with the product.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function barcodes(): HasMany
+    {
+        return $this->hasMany(Barcode::class);
+    }
+
+
+    /**
+     * Get the primary and active barcode(s) for the product.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function primaryBarcode(): HasMany
+    {
+        return $this->hasMany(Barcode::class)->where('type', 'primary')->where('is_active', true);
+    }
+
+    /**
+     * Find a product by searching for its barcode or SKU.
+     *
+     * It first attempts to find the product via an active barcode,
+     * then falls back to searching by the product's SKU.
+     *
+     * @param string $code The barcode or SKU string to search for.
+     * @return ?Product The product model, or null if not found.
+     */
+    public static function findByBarcodeOrSku(string $code): ?Product
+    {
+        $product = Barcode::findProductByCode($code);
+
+        if ($product) {
+            return $product;
+        }
+        return static::where('sku', $code)->first();
     }
 }

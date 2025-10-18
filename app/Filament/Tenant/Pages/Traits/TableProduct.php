@@ -79,7 +79,7 @@ trait TableProduct
                         ->extraAttributes([
                             'class' => 'font-bold',
                         ])
-                        ->formatStateUsing(fn (Product $product) => __('Stock').': '.$product->stock),
+                        ->formatStateUsing(fn (Product $product) => __('Stock').': '.$product->stocks()->sum('stock')),
                 ]),
             ])
             ->contentGrid([

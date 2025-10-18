@@ -49,9 +49,9 @@
 2. Navigate to the project directory: cd lakasir
 3. Install dependencies:
 4. Laravel:
-   * `composer install`
    * `cp .env.example .env`
    * edit the env based on your local configuration
+   * `composer install`
    * `php artisan key:generate`
    * `php artisan migrate --path=database/migrations/tenant --seed`
    * `php artisan filament:assets`

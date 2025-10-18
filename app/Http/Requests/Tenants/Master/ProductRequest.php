@@ -44,7 +44,7 @@ class ProductRequest extends FormRequest
             $product = Product::findorfail($this->route('product'));
             $this->merge([
                 'sku' => $this->filled('sku') ? $this->sku : $product->sku,
-                'barcode' => $this->filled('barcode') ? $this->barcode : $product->barcode,
+                'barcode' => $this->filled('barcode') ? $this->barcode : $product->barcodes()->primary()->active()->value('code'),
                 'name' => $this->filled('name') ? $this->name : $product->name,
                 'category' => $this->filled('category') ? $this->category : $product->category_id,
                 'stock' => $this->filled('stock') ? $this->stock : $product->stock,
